@@ -1,15 +1,13 @@
----
-sidebar_position: 0
----
-
 # Session Types
 
-NyaTerm is not just an SSH client. It is a desktop app that puts multiple terminal workflows into one workspace. It currently supports four session types:
+NyaTerm is not just an SSH client. It is a desktop app that puts multiple terminal and remote-desktop workflows into one workspace. It currently supports six session types:
 
 - **SSH**
 - **Local Terminal**
 - **Telnet**
 - **Serial**
+- **RDP**
+- **VNC**
 
 Understanding the differences helps explain why some panels or enhancements only appear for certain tabs.
 
@@ -17,10 +15,12 @@ Understanding the differences helps explain why some panels or enhancements only
 
 | Session Type | Typical scenario | Key capabilities |
 |--------------|------------------|------------------|
-| SSH | Remote Linux / Unix administration | SFTP, OTP, resource / GPU / process / Docker monitoring, proxy, jump host, tunnels, algorithm preferences |
+| SSH | Remote Linux / Unix administration | SFTP, OTP, resource / NVIDIA GPU / Ascend NPU / process / Docker monitoring, proxy, jump host, tunnels, algorithm preferences |
 | Local Terminal | Local shell work, scripts, builds | Shared terminal UI, command history, split panes |
 | Telnet | Legacy devices, lab environments, compatibility troubleshooting | Terminal workspace features with `Backspace Mode`, but not SSH-only features |
 | Serial | Routers, switches, boards, embedded debug ports | Serial port settings, `Backspace Mode`, and terminal workspace features |
+| RDP | Windows Remote Desktop or graphical administration entry points | Remote desktop display, NLA/CredSSP, certificate verification, text clipboard, window fitting, and reconnects |
+| VNC | Raw TCP VNC services, VM consoles, lightweight graphical remote desktops | Raw / ZRLE / Tight / Tight JPEG display, None / VNC Auth, window scaling, text clipboard, and reconnects |
 
 ## SSH
 
@@ -29,7 +29,7 @@ SSH is the most capable session type in NyaTerm. It is the best fit when you nee
 - Log in to remote Linux / Unix hosts
 - Browse and transfer remote files
 - Use OTP, jump hosts, or proxies
-- Watch remote resource, GPU, process, and Docker monitoring
+- Watch remote resource, NVIDIA GPU, Ascend NPU, process, and Docker monitoring
 - Configure port tunnels
 - Fine-tune negotiated SSH algorithms
 
@@ -42,7 +42,7 @@ If you need any of these, use **SSH** first:
 
 ## Local Terminal
 
-Local Terminal is useful when you want your local shell workflow inside the same NyaTerm workspace, for example:
+Local Terminal puts your local shell workflow inside the same NyaTerm workspace, for example:
 
 - Running frontend or Rust builds locally
 - Running scripts, reading logs, or using Git
@@ -63,7 +63,7 @@ When creating a local terminal, you can also choose:
 
 ## Telnet
 
-Telnet is useful for:
+Telnet sessions are for:
 
 - Maintaining older equipment
 - Lab environments
@@ -82,7 +82,7 @@ For devices that expect specific erase behavior, Telnet also exposes `Backspace 
 
 ## Serial
 
-Serial sessions are useful for connecting to:
+Serial sessions connect to:
 
 - Network device console ports
 - Routers and switches
@@ -99,6 +99,18 @@ When creating a serial session, you can configure:
 
 Serial sessions still live inside NyaTerm's tabbed and split workspace, so you can watch serial output in one pane while running commands in an SSH or local terminal pane.
 
+## RDP
+
+An RDP session connects to a Windows host or another remote desktop serving RDP. It shares tabs, split panes, and the saved-connection system with terminal sessions, but it carries a graphical framebuffer rather than a text terminal — so there is no command history, SFTP file explorer, SSH proxy / jump host, or remote host monitoring.
+
+Configuration, certificate policies, and error kinds are documented in [RDP Remote Desktop](./rdp).
+
+## VNC
+
+A VNC session connects to virtual machine consoles, lab environments, or lightweight graphical desktops serving RFB, sharing the remote desktop pane and the same capability boundaries as RDP.
+
+Transport is currently direct TCP only, with no TLS / VeNCrypt. Configuration, encoding support, and interoperability status are documented in [VNC Remote Desktop](./vnc).
+
 ## How to choose
 
 A simple rule of thumb:
@@ -107,6 +119,8 @@ A simple rule of thumb:
 - Need a local shell? Use **Local Terminal**
 - Need a traditional remote terminal? Use **Telnet**
 - Need a device console or debug port? Use **Serial**
+- Need a graphical Windows remote desktop? Use **RDP**
+- Need a VNC / VM console graphical desktop? Use **VNC**
 
 ## Mix them in one workspace
 
@@ -115,11 +129,7 @@ One of NyaTerm's strengths is that you can mix these session types in the same w
 - SSH on the left to watch remote logs
 - Local Terminal on the right to run packaging or Git commands
 - A Serial tab open to watch device boot output
+- An RDP pane open to inspect a Windows remote desktop
+- A VNC pane open to operate a VM console
 
 That is why some features are documented as session-specific. The workspace is shared, but the capability boundary still depends on the underlying session type.
-
-:::tip Screenshot suggestion
-- Suggested image path: `/img/docs/session-types/new-session-tabs.png`
-- Show the SSH / Local Terminal / Telnet / Serial tabs in the new-session window
-- Keeping the default field areas visible helps readers understand the differences
-:::
